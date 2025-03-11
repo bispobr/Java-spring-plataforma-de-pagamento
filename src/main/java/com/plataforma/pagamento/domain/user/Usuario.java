@@ -1,5 +1,6 @@
 package com.plataforma.pagamento.domain.user;
 
+import com.plataforma.pagamento.dtos.UsuarioDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,5 +33,16 @@ public class Usuario {
 
     @Enumerated(EnumType.STRING)
     private TipoUsuario tipoUsuario;
+
+    public  Usuario (UsuarioDTO usuario){
+        this.nome = usuario.nome();
+        this.sobrenome = usuario.Sobrenome();
+        this.Saldo = usuario.saldo();
+        this.tipoUsuario =  usuario.tipoUsuario();
+        this.senha= usuario.senha();
+        this.cpf = usuario.cpf();
+        this.email =  usuario.email();
+
+    }
 
 }
