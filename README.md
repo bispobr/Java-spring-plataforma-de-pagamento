@@ -1,64 +1,162 @@
-# Java-spring-plataforma-de-pagamento
+# Java Spring - Plataforma de Pagamentos
 
-Este repositório contém um projeto simples desenvolvido em Java Spring, com o objetivo de praticar e aplicar os conceitos dessa tecnologia. O projeto implementa um serviço de pagamento, permitindo transferências monetárias entre usuários. Os usuários são classificados em dois tipos: comuns e lojistas, e ambos possuem carteiras com saldo disponível para transferência. As Regras de negócio sequem os requisitos Abaixo. 
-### Requisitos
+API REST desenvolvida com Java e Spring Boot para simular uma plataforma de pagamentos, permitindo transferências de valores entre usuários de acordo com as regras de negócio definidas para cada tipo de usuário.
 
-- Os usuário tem como atributos Nome Completo, CPF, e-mail e Senha. CPF/CNPJ e e-mails são
-  únicos no sistema;
-- Os Usuários podem realizar transferências entre usuários;
+O projeto utiliza carteiras com saldo disponível e implementa validações relacionadas à realização de transferências.
 
-- Usuarios Lojistas só recebem transferências;
+## Funcionalidades
 
-- Validar se o usuário tem saldo antes da transferência;
+- Cadastro de usuários
+- Listagem de usuários
+- Cadastro de usuários comuns e lojistas
+- Transferência de valores entre usuários
+- Controle de saldo das carteiras
+- Validação de saldo disponível antes da transferência
+- Restrição para que usuários lojistas não realizem transferências
+- CPF/CNPJ e e-mail únicos
+- Persistência utilizando H2 Database
 
-## Instalação
+## Regras de negócio
 
-1. Clone o repositório:
+### Usuários
 
-```bash
-git https://github.com/bispobr/Java-spring-plataforma-de-pagamento.git
+Cada usuário possui informações como:
+
+- Nome completo
+- CPF/CNPJ
+- E-mail
+- Senha
+- Tipo de usuário
+- Saldo disponível
+
+CPF/CNPJ e e-mail devem ser únicos no sistema.
+
+### Transferências
+
+Para realizar uma transferência:
+
+1. O usuário remetente deve possuir saldo suficiente.
+2. O destinatário deve ser um usuário válido.
+3. Usuários lojistas não podem realizar transferências.
+4. O valor da transferência deve ser válido.
+5. O saldo dos envolvidos deve ser atualizado de acordo com a operação.
+
+Fluxo simplificado:
+
+```text
+Remetente
+   │
+   │ valor
+   ▼
+Validação de regras
+   │
+   ├── saldo disponível?
+   ├── usuário permitido?
+   └── destinatário válido?
+          │
+          ▼
+     Transferência
+          │
+          ├── débito do remetente
+          └── crédito do destinatário
 ```
 
-2. Instale as dependências com Maven
+## Tecnologias
 
-## Como Usar
+- Java
+- Spring Boot
+- Spring Web
+- Spring Data JPA
+- H2 Database
+- Maven
 
-1. Inicie a aplicação com o Maven
-2. API está acessível através do Link http://localhost:8080
+## Requisitos
+
+- Java 11+
+- Maven
+
+## Executando o projeto
+
+Clone o repositório:
+
+```bash
+git clone https://github.com/bispobr/Java-spring-plataforma-de-pagamento.git
+cd Java-spring-plataforma-de-pagamento
+```
+
+Execute a aplicação com Maven:
+
+```bash
+mvn spring-boot:run
+```
+
+A API estará disponível em:
+
+```text
+http://localhost:8080
+```
 
 ## API Endpoints
 
-API contém os seguinte endpoint :
+### Realizar transferência
 
-```http request
-POST /transactions - Realiza uma nova transferência.
+```http
+POST /transactions
 Content-Type: application/json
+```
 
+Exemplo:
+
+```json
 {
-  "valor": 000000,
-  "remetenteId": 000000,
-  "destinatarioId": 000000
+  "valor": 100.00,
+  "remetenteId": 1,
+  "destinatarioId": 2
 }
 ```
 
-```http request
-GET /users - lista todos os usuarios.
+### Listar usuários
 
+```http
+GET /users
 ```
 
-```http request
-POST /users - Cadastra um novo Usuario.
-Content-Type: application/json
+### Cadastrar usuário
 
+```http
+POST /users
+Content-Type: application/json
+```
+
+Exemplo:
+
+```json
 {
-  "nome": "xxxxx",
-  "Sobrenome": "xxxxxxx",
-  "cpf": "00000000000",
-  "saldo": 00,
-  "email": "xxxx@xx.xxx",
-  "senha": "xxxxxx",
-  "tipoUsuario": "USUARIOS"
+  "nome": "João da Silva",
+  "cpf": "12345678900",
+  "saldo": 500.00,
+  "email": "joao@example.com",
+  "senha": "senha",
+  "tipoUsuario": "USUARIO"
 }
 ```
-## Banco-de-Dados
-Esse projeto utiliza o H2 como Banco de Dados.
+
+> Os nomes e valores exatos dos campos devem seguir os contratos implementados pela aplicação.
+
+## Banco de Dados
+
+O projeto utiliza **H2 Database** para persistência dos dados.
+
+Por padrão, o banco é utilizado como banco de desenvolvimento e testes da aplicação.
+
+## Testes
+
+Execute os testes com:
+
+```bash
+mvn test
+```
+
+## Status
+
+Projeto de estudo desenvolvido para praticar desenvolvimento de APIs REST com Spring Boot, persistência com JPA e implementação de regras de negócio relacionadas a uma plataforma de pagamentos.
